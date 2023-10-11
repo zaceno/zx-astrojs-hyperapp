@@ -1,0 +1,29 @@
+{
+  "name": "astrojs-hyperapp",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Hyperapp integration for astro.build",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zaceno/zx-astrojs-hyperapp.git"
+  },
+  "keywords": [
+    "astro",
+    "hyperapp"
+  ],
+  "author": "Zacharias Enochsson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zaceno/zx-astrojs-hyperapp/issues"
+  },
+  "homepage": "https://github.com/zaceno/zx-astrojs-hyperapp#readme",
+  "dependencies": {
+    "hyperapp": "^2.0.22",
+    "hyperapp-jsx-pragma": "^1.3.0",
+    "undom": "^0.4.0"
+  }
+}
