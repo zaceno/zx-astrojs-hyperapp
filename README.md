@@ -3,12 +3,11 @@
 Allows you to add client-side-interactive islands in your astro apps using hyperapp.
 
 - Supports SSR/SSG and client side hydration.
-- SSR does not yet work well with long running/asynchronous effects/subs on init.
-- Does not yet support HMR.
 - JSX support included out of the box.
-- Does not currently play nice with other client-side integrations.
-- Does not support children/slots.
-- A work in progress. Help welcome!
+- Does not yet support:
+  - HMR.
+  - mixing with other client-side ui-framework integrations.
+  - children/slots.
 
 Demo: https://stackblitz.com/github/zaceno/astrojs-hyperapp-demo
 
@@ -96,7 +95,8 @@ is a perfectly good option. You will just have to write your own effects/subscri
 
 Another option is to install `@zxlabs/hyperapp-extra`, and use it like this:
 
-***`island1.jsx`***
+**_`island1.jsx`_**
+
 ```js
 import _sync from '@zxlabs/hyperapp-extra/island'
 
@@ -111,7 +111,8 @@ export default props => sync({
 })
 ```
 
-***`island2.jsx`***
+**_`island2.jsx`_**
+
 ```js
 import {sync} from './island1.jsx'
 
@@ -126,3 +127,11 @@ will have the same state. See the demo above for an example of this.
 
 ```
 
+## Caveat regarding SSR
+
+When using SSR (if your island uses any other client directive than `client:only`) we
+need to run the `init` action server side in order to properly render the view. And the
+init action might have effects designed to only work in the browser. That will cause errors.
+It is up to you to preven browser-only-effects from running when in a server environment.
+>>>>>>> 0141e38 (make server-side rendering safer)
+```

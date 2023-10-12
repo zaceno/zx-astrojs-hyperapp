@@ -23,13 +23,9 @@ const renderToStaticMarkup = async (componentFn, props) =>
     const parent = document.createElement("div")
     const node = document.createElement("div")
     parent.appendChild(node)
-    //TODO
-    // prevent running app from effects that aren't defined
-    // might be problem with fetch, setTimeout, setInterval
-    // as those do exist in node. We just want initial
-    // actions to happen
-    app({ ...componentFn(props), node })
+    const stop = app({ ...componentFn(props), subscriptions: _ => [], node })
     setTimeout(() => {
+      stop() //prevents any eventual callbacks from calling back
       resolve({ html: serialize(parent.firstChild) })
     }, 0)
   })
