@@ -87,3 +87,42 @@ import Counter from '../components/counter.jsx'
 
 Note how the props passed in to the island in the astro-component,
 are available in the `serverProps` we defined in the counter.
+
+## Sharing state between islands
+
+Since each island will be it's own instance of a hyperapp-app they will not share state.
+Astro recommends using [nanostores](https://github.com/nanostores) for sharing states, and that
+is a perfectly good option. You will just have to write your own effects/subscriptions.
+
+Another option is to install `@zxlabs/hyperapp-extra`, and use it like this:
+
+***`island1.jsx`***
+```js
+import _sync from '@zxlabs/hyperapp-extra/island'
+
+//define a syncer for islands 1 and 2
+export const sync = _sync()
+
+//same as defining a regular astro island
+//but wrap props in syncer
+export default props => sync({
+  init: //... init island 1,
+  view: //... view island 1,
+})
+```
+
+***`island2.jsx`***
+```js
+import {sync} from './island1.jsx'
+
+export default props => sync({
+  init: //... init island 2,
+  view: //... view island 2
+})
+```
+
+Islands synced in this way, by decorating their app-definition props with the same sync-function,
+will have the same state. See the demo above for an example of this.
+
+```
+
