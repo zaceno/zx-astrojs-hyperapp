@@ -10,6 +10,8 @@ Allows you to add client-side-interactive islands in your astro apps using hyper
 - Does not support children/slots.
 - A work in progress. Help welcome!
 
+Demo: [https://stackblitz.com/github/zaceno/astrojs-hyperapp-demo]
+
 ## Installation:
 
 In your astro project:
