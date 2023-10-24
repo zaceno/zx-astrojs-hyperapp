@@ -113,12 +113,13 @@ Since each island will be it's own instance of a hyperapp-app they will not shar
 Astro recommends using [nanostores](https://github.com/nanostores) for sharing states, and that
 is a perfectly good option. You will just have to write your own effects/subscriptions.
 
-Another option is to install `@zxlabs/hyperapp-extra`, and use it like this:
+Another option, specifically for hyperapp islands, is to use the island-sync utility
+shipped with this integration, like this:
 
 **_`island1.jsx`_**
 
 ```js
-import _sync from '@zxlabs/hyperapp-extra/island'
+import _sync from '@zxlabs/astrojs-hyperapp/island-sync'
 
 //define a syncer for islands 1 and 2
 export const sync = _sync()
@@ -142,8 +143,8 @@ export default props => sync({
 })
 ```
 
-Islands synced in this way, by decorating their app-definition props with the same sync-function,
-will have the same state. See the demo above for an example of this.
+Islands synced in this way, by decorating their app-props with a common sync-function,
+will all share state. See the demo above for an example of this.
 
 ```
 
