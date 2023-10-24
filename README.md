@@ -1,13 +1,11 @@
 # Hyperapp Integration for Astro
 
-Allows you to add client-side-interactive islands in your astro apps using hyperapp.
+Allows you to add client-side-interactive islands in your astro apps using hyperapp, with jsx if you want it.
 
-- Supports SSR/SSG and client side hydration.
-- JSX support included out of the box.
 - Does not yet support:
-  - HMR.
-  - mixing with other client-side ui-framework integrations.
+  - JSX Fragments
   - children/slots.
+  - HMR.
 
 Demo: https://stackblitz.com/github/zaceno/astrojs-hyperapp-demo
 
@@ -27,6 +25,28 @@ import hyperapp from "@zxlabs/astrojs-hyperapp"
 
 export default defineConfig({
   integrations: [hyperapp()],
+})
+```
+
+### Note on mixing with other ui frameworks
+
+If you're using jsx for your components, and also use other frameworks that use jsx, you need to
+explicitly tell the integrations which files it should include or exclude using [picomatch](https://github.com/micromatch/picomatch#globbing-features)
+patterns.
+
+This might require you to use some naming convention or folder structure to make it possible to
+separate components from different frameworks
+
+```js
+import { defineConfig } from "astro/config"
+import hyperapp from "@zxlabs/astrojs-hyperapp"
+import preact from "@astrojs/preact"
+
+export default defineConfig({
+  integrations: [
+    hyperapp({ include: ["**/hyperapp/*"] }), //exclude option also possible
+    preact({ include: ["**/preact/*"] }), //exclude option also possible
+  ],
 })
 ```
 

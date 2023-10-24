@@ -16,7 +16,15 @@ const serialize = el =>
       el.nodeName.toLowerCase() +
       ">"
 
-const check = () => true
+function check(component, props, children) {
+  if (typeof component !== "function") return false
+  const test = component(props, children)
+  return (
+    typeof test === "object" &&
+    test.constructor === Object &&
+    typeof test.view === "function"
+  )
+}
 
 const renderToStaticMarkup = async (componentFn, props) =>
   new Promise(resolve => {
