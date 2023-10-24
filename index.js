@@ -13,7 +13,7 @@ const vitePluginConfig = () => ({
   optimizeDeps: { include: ["hyperapp-jsx-pragma/jsx-runtime"] },
 })
 
-const vitePluginTransform = options => {
+const vitePluginTransform = (options = {}) => {
   const filter = createFilter(
     options.include || [/\.jsx/],
     options.exclude || ["**/node_modules/*"],

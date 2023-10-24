@@ -1,4 +1,5 @@
-- make client/server work with asynchronous island definitions
-- make jsx play nice with other frameworks (or disable jsx by default)
-- enable HMR
+- Build in JSX with fragment support
 - Figure out slotting in children in hyperapp components
+- Make sure SSR works
+- enable HMR
+- Make TS/TSX work
