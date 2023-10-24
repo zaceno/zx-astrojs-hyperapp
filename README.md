@@ -3,8 +3,8 @@
 Allows you to add client-side-interactive islands in your astro apps using hyperapp, with jsx if you want it.
 
 - Does not yet support:
-  - JSX Fragments
-  - children/slots.
+  - static astro children.
+  - TS/TSX
   - HMR.
 
 Demo: https://stackblitz.com/github/zaceno/astrojs-hyperapp-demo

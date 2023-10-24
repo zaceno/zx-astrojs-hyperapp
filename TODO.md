@@ -1,4 +1,3 @@
-- Build in JSX with fragment support
 - Figure out slotting in children in hyperapp components
 - Make sure SSR works
 - enable HMR

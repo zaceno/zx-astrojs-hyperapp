@@ -5,12 +5,12 @@ const babelPluginJSX = [
   "@babel/plugin-transform-react-jsx",
   {
     runtime: "automatic",
-    importSource: "hyperapp-jsx-pragma",
+    importSource: "@zxlabs/astrojs-hyperapp",
   },
 ]
 
 const vitePluginConfig = () => ({
-  optimizeDeps: { include: ["hyperapp-jsx-pragma/jsx-runtime"] },
+  optimizeDeps: { include: ["@zxlabs/astrojs-hyperapp/jsx-runtime.js"] },
 })
 
 const vitePluginTransform = (options = {}) => {
