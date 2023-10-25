@@ -1,5 +1,7 @@
-export default (state = {}) => {
-  const stateRef = { state }
+import { app } from "hyperapp"
+
+export default ({ init, subscriptions, dispatch }) => {
+  const stateRef = { state: {} }
   const synced = []
   const syncmw = dispatch => {
     synced.push(dispatch)
@@ -16,9 +18,10 @@ export default (state = {}) => {
       dispatch(action, payload)
     }
   }
-  return props => ({
-    ...props,
-    dispatch: d => syncmw(props.dispatch ? props.dispatch(d) : d),
-    init: [stateRef.state, !!props.init && (d => d(props.init))],
+  app({
+    init,
+    subscriptions,
+    dispatch: d => syncmw(!!dispatch ? dispatch(d) : d),
   })
+  return view => ({ view, init: stateRef.state, dispatch: syncmw })
 }

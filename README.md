@@ -63,7 +63,7 @@ which will be provided by this integration.
 **`/src/components/counter.jsx`**
 
 ```jsx
-const HyperappCounter = serverProps => ({
+export default const serverProps => ({
   init: serverProps.startCount || 0,
   view: value => (
     <div class="counter">
@@ -76,8 +76,6 @@ const HyperappCounter = serverProps => ({
   // subscriptions: ...
   // dispatch: ...
 })
-
-export default HyperappCounter
 ```
 
 ## Using islands on a page:
@@ -113,23 +111,34 @@ Since each island will be it's own instance of a hyperapp-app they will not shar
 Astro recommends using [nanostores](https://github.com/nanostores) for sharing states, and that
 is a perfectly good option. You will just have to write your own effects/subscriptions.
 
-Another option, specifically for hyperapp islands, is to use the island-sync utility
-shipped with this integration, like this:
+Another option, specifically for hyperapp islands, is to use state synchronization the utility
+shipped with this integration. With this, you define a headless "master-app" by providing an
+`init` prop and optionally `subscriptions` and `dispatch` (for middleware). It will return
+a function which islands can use to simply provide their view-funcitons. Although they will
+be rendered as separate islands (and technically individual app-instances), their state
+will be shared.
 
 **_`island1.jsx`_**
 
 ```js
-import _sync from '@zxlabs/astrojs-hyperapp/island-sync'
+import syncedIslands from '@zxlabs/astrojs-hyperapp/synced-islands'
 
 //define a syncer for islands 1 and 2
-export const sync = _sync()
-
-//same as defining a regular astro island
-//but wrap props in syncer
-export default props => sync({
-  init: //... init island 1,
-  view: //... view island 1,
+export const sync = syncedIslands({
+  init: ...          // initial states and effects
+  subscriptions: ... // optional
+  dispatch: ...      // optional
 })
+
+// This is the same as defining a regular island,
+// but init and dispatch props are provided by
+// the island-function, to sync the state
+// with the headless master.
+export default props => sync(state => (
+  <section class="info">
+  ...
+  </section>
+))
 ```
 
 **_`island2.jsx`_**
@@ -137,15 +146,11 @@ export default props => sync({
 ```js
 import {sync} from './island1.jsx'
 
-export default props => sync({
-  init: //... init island 2,
-  view: //... view island 2
-})
-```
+const DoSomething = state => ... // state will be as defined by master
 
-Islands synced in this way, by decorating their app-props with a common sync-function,
-will all share state. See the demo above for an example of this.
-
+export default props => sync(state => (
+  <button onclick={DoSomething}>...</button>
+))
 ```
 
 ## Caveat regarding SSR
@@ -154,5 +159,3 @@ When using SSR (if your island uses any other client directive than `client:only
 need to run the `init` action server side in order to properly render the view. And the
 init action might have effects designed to only work in the browser. That will cause errors.
 It is up to you to preven browser-only-effects from running when in a server environment.
->>>>>>> 0141e38 (make server-side rendering safer)
-```
