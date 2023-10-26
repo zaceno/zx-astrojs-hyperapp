@@ -2,10 +2,7 @@
 
 Allows you to add client-side-interactive islands in your astro apps using hyperapp, with jsx if you want it.
 
-- Does not yet support:
-  - static astro children.
-  - TS/TSX
-  - HMR.
+> Does not yet support HMR and TS/TSX
 
 Demo: https://stackblitz.com/github/zaceno/astrojs-hyperapp-demo
 
@@ -105,14 +102,102 @@ import Counter from '../components/counter.jsx'
 Note how the props passed in to the island in the astro-component,
 are available in the `serverProps` we defined in the counter.
 
+## Passing static content to islands
+
+You can pass static content from astro components in to your islands,
+for example to control hiding/showing the content.
+
+**_`index.astro`_**
+
+```jsx
+---
+import ContentToggle from '../components/ContentToggle.jsx'
+---
+<p> Click to reveal contents:</p>
+<ContentToggle client:load>
+  <p class="red">
+    This text his hidden by default. And red.
+  </p>
+</ContentToggle>
+<style>
+.red {
+  color: red;
+}
+</style>
+```
+
+**_`ContentToggle.jsx`_**
+
+```jsx
+export default (props, content) => ({
+  init: false,
+  view: showing => (
+    <div style={{border: '1px black solid'}}>
+      <button onclick={showing => !showing}>
+        {showing ? 'Hide' : 'Show'}
+      </button>
+      <div>
+        {showing && content}
+    </div>
+  )
+})
+```
+
+This is the default behavior for all content not specifically slotted. You can also
+set a html node to appear in a specific slot with the `slot` attribute. Such content
+is passed to the island in a property named as the slot:
+
+**_`index.astro`_**
+
+```jsx
+---
+import ContentToggle from '../components/ContentToggle.jsx'
+---
+<p> Click to reveal contents:</p>
+<ContentToggle client:load>
+  <p class="red">
+    This text his hidden by default. And red.
+  </p>
+  <p slot="footer">This footer text is always visible</div>
+</ContentToggle>
+<style>
+.red {
+  color: red;
+}
+</style>
+```
+
+**_`ContentToggle.jsx`_**
+
+```jsx
+export default (props, content) => ({
+  init: false,
+  view: showing => (
+    <div style={{border: '1px black solid'}}>
+      <button onclick={showing => !showing}>
+        {showing ? 'Hide' : 'Show'}
+      </button>
+      <div>
+        {showing && content}
+        {props.footer}
+    </div>
+  )
+})
+```
+
+Slot-names need to be given as snake/kebab case (e.g `slot="kebab-case"` or `slot="snake_case"`) but
+in `.astro` files (in order to be html-compliant). But for your convenience, such names are transformed to
+camelCase (e.g. `props.kebabCase` or `props.snakeCase`) in the props passed to the island.
+
 ## Sharing state between islands
 
 Since each island will be it's own instance of a hyperapp-app they will not share state.
 Astro recommends using [nanostores](https://github.com/nanostores) for sharing states, and that
 is a perfectly good option. You will just have to write your own effects/subscriptions.
 
-Another option, specifically for hyperapp islands, is to use state synchronization the utility
-shipped with this integration. With this, you define a headless "master-app" by providing an
+Another option is to use state synchronization utility shipped with this integration.
+
+With this, you define a headless "master-app" by providing an
 `init` prop and optionally `subscriptions` and `dispatch` (for middleware). It will return
 a function which islands can use to simply provide their view-funcitons. Although they will
 be rendered as separate islands (and technically individual app-instances), their state
@@ -152,10 +237,3 @@ export default props => sync(state => (
   <button onclick={DoSomething}>...</button>
 ))
 ```
-
-## Caveat regarding SSR
-
-When using SSR (if your island uses any other client directive than `client:only`) we
-need to run the `init` action server side in order to properly render the view. And the
-init action might have effects designed to only work in the browser. That will cause errors.
-It is up to you to preven browser-only-effects from running when in a server environment.
