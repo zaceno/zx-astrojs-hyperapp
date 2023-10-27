@@ -19,7 +19,7 @@ const renderToStaticMarkup = async (componentFn, props, slots, meta) =>
     const parent = document.createElement("div")
     const node = document.createElement("div")
     parent.appendChild(node)
-    const [defaultSlot, namedSlots] = slotProcessor(slots, !!meta.hydrate)
+    const [defaultSlot, namedSlots] = slotProcessor(slots)
     const stop = app({
       ...componentFn({ ...namedSlots, ...props }, defaultSlot),
       subscriptions: _ => [],
