@@ -1,6 +1,6 @@
 {
   "name": "@zxlabs/astrojs-hyperapp",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "module",
   "description": "Hyperapp integration for astro.build",
   "main": "index.js",
